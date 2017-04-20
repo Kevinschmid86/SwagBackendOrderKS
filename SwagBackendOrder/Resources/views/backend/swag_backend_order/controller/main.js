@@ -51,6 +51,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.controller.Main', {
         me.previousOrderModel = Ext.create('Shopware.apps.SwagBackendOrder.model.CreateBackendOrder');
         me.previousOrderModel.set('taxFree', false);
         me.previousOrderModel.set('displayNet', false);
+        me.previousOrderModel.set('sendMail', false);
 
         //checks if a window is already open
         var createOrderWindow = Ext.getCmp('swagBackendOrderWindow');
@@ -101,7 +102,8 @@ Ext.define('Shopware.apps.SwagBackendOrder.controller.Main', {
             'createbackendorder-totalcostsoverview': {
                 calculateBasket: me.onCalculateBasket,
                 changeDisplayNet: me.onChangeDisplayNet,
-                changeTaxFreeCheckbox: me.onChangeTaxFree
+                changeTaxFreeCheckbox: me.onChangeTaxFree,
+                changeSendMail: me.onChangeSendMail
             }
         });
 
@@ -744,6 +746,11 @@ Ext.define('Shopware.apps.SwagBackendOrder.controller.Main', {
         var me = this;
         me.orderModel.set('displayNet', newValue);
         me.onCalculateBasket();
+    },
+
+    onChangeSendMail: function (newValue, oldValue) {
+        var me = this;
+        me.orderModel.set('sendMail', newValue);
     },
 
     /**

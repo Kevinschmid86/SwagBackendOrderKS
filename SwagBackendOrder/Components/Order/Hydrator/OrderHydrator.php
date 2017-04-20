@@ -53,6 +53,7 @@ class OrderHydrator
         $orderStruct->setDeviceType((string) $data['desktopType']);
 
         $orderStruct->setNetOrder((boolean) $data['displayNet']);
+        $orderStruct->setSendMail((boolean) $data['sendMail']);
         $orderStruct->setTaxFree((boolean) $data['taxFree']);
 
         $orderStruct->setTotal((float) $data['total']);

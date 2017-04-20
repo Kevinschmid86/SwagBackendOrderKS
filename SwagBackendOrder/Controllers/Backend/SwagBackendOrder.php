@@ -118,7 +118,9 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
 
             $modelManager->getConnection()->commit();
 
-            $this->sendOrderConfirmationMail($order);
+            //Only send Mail if checkbox is active
+            if($orderStruct->getSendMail() == 1)
+                $this->sendOrderConfirmationMail($order);
         } catch (InvalidOrderException $e) {
             $modelManager->getConnection()->rollBack();
 
