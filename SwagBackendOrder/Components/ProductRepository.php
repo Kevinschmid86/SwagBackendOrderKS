@@ -10,6 +10,8 @@ namespace SwagBackendOrder\Components;
 
 use Shopware\Components\Model\ModelManager;
 use Shopware\Models\Article\Article;
+use Shopware\Models\Article\Supplier;
+use Doctrine\ORM\Query\Expr;
 
 class ProductRepository
 {
@@ -48,33 +50,30 @@ class ProductRepository
             articles.taxId,
             prices.price,
             details.additionalText,
-            tax.tax'
+            tax.tax,
+            articles.supplierId,
+            sp.id as supplierID'
         );
 
         $builder->from(Article::class, 'articles')
             ->leftJoin('articles.details', 'details')
             ->leftJoin('details.prices', 'prices')
             ->leftJoin('articles.tax', 'tax')
-            ->where(
-                $builder->expr()->like(
-                    $builder->expr()->concat(
-                        'articles.name',
-                        $builder->expr()->concat(
-                            $builder->expr()->literal(' '),
-                            'details.additionalText'
-                        )
-                    ),
-                    $builder->expr()->literal($search)
-                )
+            ->leftJoin(
+                Supplier::class,
+                'sp',
+                Expr\Join::WITH,
+                'articles.supplierId = sp.id'
             )
+            ->where('articles.name LIKE :number')
             ->orWhere('details.number LIKE :number')
-            ->andWhere('articles.active = 1')
+            ->orWhere('sp.name LIKE :number')
             ->andWhere('prices.customerGroupKey = :groupkey')
             ->setParameter('number', $search)
             ->setParameter('groupkey', $groupKey)
             ->orderBy('details.number')
             ->groupBy('details.number')
-            ->setMaxResults(8);
+            ->setMaxResults(12);
 
         return $builder;
     }
