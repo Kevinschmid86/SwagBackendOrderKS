@@ -479,14 +479,15 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
 
             $mail = Shopware()->TemplateMail()->createMail('sORDER', $context);
             $mail->addTo($context["additional"]["user"]["email"]);
-            $mail->send();
 
             //If configured send an email to the shop owner
             $mailNotToShopOwner = Shopware()->Config()->get('no_order_mail');
             if (!$mailNotToShopOwner) {
-                $mail->addTo(Shopware()->Config()->get('mail'));
-                $mail->send();
+                $mail->addBcc(Shopware()->Config()->get('mail'));
             }
+
+            $mail->send();
+
         } catch (\Exception $e) {
             $this->view->assign('mail', $e->getMessage());
         }
